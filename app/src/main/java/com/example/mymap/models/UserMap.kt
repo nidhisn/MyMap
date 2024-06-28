@@ -1,4 +1,4 @@
 package com.example.mymap.models
 
-class UserMap() {
+data class UserMap(val title:String, val places:List<Place>) {
 }
