@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="rich_black">#0D1B2A</color>
+    <color name="oxford_blue">#1B263B</color>
+    <color name="YInMn_Blue">#415A77</color>
+    <color name="Silver_Lake_Blue">#778DA9</color>
+    <color name="Platinum">#E0E1DD</color>
 </resources>

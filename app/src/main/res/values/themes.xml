@@ -3,6 +3,16 @@
     <style name="Base.Theme.MyMap" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/oxford_blue</item>
+        <item name="colorPrimaryDark">@color/rich_black</item>
+        <item name="colorAccent">@color/YInMn_Blue</item>
+
+        <!-- Background color -->
+        <item name="android:windowBackground">@color/Platinum</item>
+
+        <!-- Text colors -->
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/Silver_Lake_Blue</item>
     </style>
 
     <style name="Theme.MyMap" parent="Base.Theme.MyMap" />

@@ -3,5 +3,17 @@
     <style name="Base.Theme.MyMap" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+
+        <!-- Primary branding color -->
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryDark">@color/rich_black</item>
+        <item name="colorAccent">@color/YInMn_Blue</item>
+
+        <!-- Background color -->
+        <item name="android:windowBackground">@color/oxford_blue</item>
+
+        <!-- Text colors -->
+        <item name="android:textColorPrimary">@color/Platinum</item>
+        <item name="android:textColorSecondary">@color/Silver_Lake_Blue</item>
     </style>
 </resources>
