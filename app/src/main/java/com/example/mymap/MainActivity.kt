@@ -11,13 +11,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mymap.models.Place
 import com.example.mymap.models.UserMap
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 private const val TAG ="MapsAdapter"
 const val EXTRA_USER_MAP="EXTRA_USER_MAP"
+private const val REQUEST_CODE=1234
+private const val EXTRA_MAP_TITLE="EXTRA_MAP_TITLE"
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var rvMaps: RecyclerView
+    private lateinit var fabCreateMap:FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         rvMaps = findViewById(R.id.rvMaps)
+        fabCreateMap=findViewById(R.id.fabCreateMap)
 
         val userMaps=generateSampleData()
         //set layout manager on the recycler view
@@ -47,8 +52,24 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+        fabCreateMap.setOnClickListener {
+            Log.i(TAG,"Tap on FAB")
+            val intent=Intent(this@MainActivity,CreateMapActivity::class.java)
+            intent.putExtra(EXTRA_MAP_TITLE, "new map name")
+            startActivityForResult(intent, REQUEST_CODE)
+        }
+
         //when user taps on view un RV, navigate to new activity
 
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        if(requestCode== REQUEST_CODE && resultCode== RESULT_OK){
+            //GET NEW MAP DATA FROM THE DATA
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 
