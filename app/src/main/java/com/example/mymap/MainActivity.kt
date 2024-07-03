@@ -1,9 +1,14 @@
 package com.example.mymap
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -11,12 +16,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mymap.models.Place
 import com.example.mymap.models.UserMap
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 private const val TAG ="MapsAdapter"
 const val EXTRA_USER_MAP="EXTRA_USER_MAP"
 private const val REQUEST_CODE=1234
-private const val EXTRA_MAP_TITLE="EXTRA_MAP_TITLE"
+const val EXTRA_MAP_TITLE="EXTRA_MAP_TITLE"
+
+private lateinit var userMaps: MutableList<UserMap>
+private lateinit var mapAdapter:MapsAdapter
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,12 +46,12 @@ class MainActivity : AppCompatActivity() {
         rvMaps = findViewById(R.id.rvMaps)
         fabCreateMap=findViewById(R.id.fabCreateMap)
 
-        val userMaps=generateSampleData()
+        userMaps=generateSampleData().toMutableList()
         //set layout manager on the recycler view
         rvMaps.layoutManager= LinearLayoutManager(this)
 
         //set adapter on the recyclerview
-        rvMaps.adapter=MapsAdapter(this, userMaps, object : MapsAdapter.OnClickListener{
+        mapAdapter=MapsAdapter(this, userMaps, object : MapsAdapter.OnClickListener{
             override fun onItemClick(position: Int) {
                 Log.i(TAG, "onItemClick $position")
 
@@ -51,12 +61,11 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+        rvMaps.adapter=mapAdapter
 
         fabCreateMap.setOnClickListener {
             Log.i(TAG,"Tap on FAB")
-            val intent=Intent(this@MainActivity,CreateMapActivity::class.java)
-            intent.putExtra(EXTRA_MAP_TITLE, "new map name")
-            startActivityForResult(intent, REQUEST_CODE)
+            showAlertDialog()
         }
 
         //when user taps on view un RV, navigate to new activity
@@ -64,10 +73,41 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun showAlertDialog() {
+        val mapFromView= LayoutInflater.from(this).inflate(R.layout.dialog_create_map,null)
+        val dialog= AlertDialog.Builder(this)
+            .setTitle("Map title")
+            .setView(mapFromView)
+            .setNegativeButton("Cancel",null)
+            .setPositiveButton("ok", null)
+            .show()
+
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener{
+            val title=mapFromView.findViewById<EditText>(R.id.etTitle).text.toString()
+
+
+            if(title.trim().isEmpty()){
+                Toast.makeText(this, "Place must have non-empty title", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            //Navigate to create map activity
+            val intent=Intent(this@MainActivity,CreateMapActivity::class.java)
+            intent.putExtra(EXTRA_MAP_TITLE, title)
+            startActivityForResult(intent, REQUEST_CODE)
+            dialog.dismiss()
+        }
+
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         if(requestCode== REQUEST_CODE && resultCode== RESULT_OK){
             //GET NEW MAP DATA FROM THE DATA
+
+            val userMap=data?.getSerializableExtra(EXTRA_USER_MAP) as UserMap
+            Log.d(TAG, "onActivityResult with new map title ${userMap.title}")
+            userMaps.add(userMap)
+            mapAdapter.notifyItemInserted(userMaps.size-1)
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
